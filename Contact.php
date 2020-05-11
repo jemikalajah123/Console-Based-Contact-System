@@ -2,17 +2,17 @@
 
 require "ContactList.php";
 
-class Contact{
+class Contact
+{
     public $email;
-    public  $name;
-    public  $address;
-    public function __construct($email,$name,$address){
+    public $name;
+    public $address;
+    public function __construct($email, $name, $address)
+    {
 
         $this->email = $email;
         $this->name = $name;
         $this->address = $address;
     }
 
-    }
-
-?>
+}
