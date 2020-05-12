@@ -1,19 +1,14 @@
 <?php
-class EmailErrException extends Exception
-{};
-class EmailValidErrException extends Exception
-{};
-class NameErrException extends Exception
-{};
-class NameValidErrException extends Exception
-{};
-class AddressErrException extends Exception
-{};
-class AddressValidErrException extends Exception
-{};
+class EmailErrException extends Exception{};
+class EmailValidErrException extends Exception{};
+class NameErrException extends Exception{};
+class NameValidErrException extends Exception{};
+class AddressErrException extends Exception{};
+class AddressValidErrException extends Exception{};
 
 class ErrorHandler
 {
+    public $errorList = [];
 
     public function test_input($data)
     {
@@ -29,42 +24,46 @@ class ErrorHandler
         try {
 
             if (empty($email)) {
-                throw new EmailErrException();
-
+                throw new EmailErrException("Email is required");
             } else {
                 $email = $this->test_input($email);
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    throw new EmailValidErrException();
+
+                    throw new EmailValidErrException("Invalid email format");
                 }
             }
-
         } catch (EmailErrException $e) {
-            echo "Email is required";
+            $this->errorList[] = "Email field is empty";
+            echo $e->getMessage();
         } catch (EmailValidErrException $e) {
-            echo "Invalid email format";
+            $this->errorList[] = "Email is not valid";
+            echo $e->getMessage();
         }
+
+        return $email;
     }
 
     public function contactName($name)
     {
-
         try {
 
             if (empty($name)) {
-                throw new NameErrException();
+                throw new NameErrException("Name is required");
             } else {
                 $name = $this->test_input($name);
                 if (!preg_match("/^[a-zA-Z ]*$/", $name)) {
-                    throw new NameValidErrException();
+                    throw new NameValidErrException("Only letters and white space allowed");
                 }
             }
-
         } catch (NameErrException $e) {
-            echo "Name is required";
+            $this->errorList[] = "Name field is empty";
+            echo $e->getMessage();
         } catch (NameValidErrException $e) {
-            echo "Only letters and white space allowed";
+            $this->errorList[] = "Name is not valid";
+            echo $e->getMessage();
         }
 
+        return $name;
     }
 
     public function contactAddress($address)
@@ -73,18 +72,23 @@ class ErrorHandler
         try {
 
             if (empty($address)) {
-                throw new AddressErrException();
+
+                throw new AddressErrException("Address is required");
             } else {
-                $address = $this->test_input($address);if (!preg_match('/^(?:\\d+ [a-zA-Z ]+, ){2}[a-zA-Z ]+$/', $address)) {
-                    throw new AddressValidErrException();
+                $address = $this->test_input($address);
+                if (!preg_match('/\d+ [0-9a-zA-Z ]+/', $address)) {
+
+                    throw new AddressValidErrException("Please enter a valid house address");
                 }
             }
-
         } catch (AddressErrException $e) {
-            echo "Address is required";
+            $this->errorList[] = "Adress field is empty";
+            echo $e->getMessage();
         } catch (AddressValidErrException $e) {
-            echo "Please enter a valid house address";
+            $this->errorList[] = "Address is not valid";
+            echo $e->getMessage();
         }
 
+        return $address;
     }
 }

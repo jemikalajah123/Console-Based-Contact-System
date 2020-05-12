@@ -22,17 +22,25 @@ class UserInterface
                 $this->showAllContact();
                 break;
             case 3:
-                $this->deleteContact();
+                if(empty($this->contactList->contact_list)){
+                    echo "No contact created yet\n";
+                }else{
+                    $this->deleteContact();
+                }
                 break;
             case 4:
-                $this->findContact();
+                if(empty($this->contactList->contact_list)){
+                    echo "No contact created yet\n";
+                }else{
+                    $this->findContact();
+
+                }
                 break;
             case 5:
                 exit();
                 break;
             default:
                 echo "Wrong Input!\n";
-
         }
     }
 
@@ -63,45 +71,75 @@ class UserInterface
 
     public function showAllContact()
     {
-
         print_r($this->contactList->contact_list);
     }
 
+    public function collectInput($var, $question)
+    {
+        while (true) {
+            $input = readline($question . "\n");
+            if ($var == 'name') {
+                $name = $input;
+                $this->error->contactName($name);
+            } elseif ($var == 'email') {
+                $email = $input;
+                $this->error->contactEmail($email);
+            } else {
+                $address = $input;
+                $this->error->contactAddress($address);
+            }
+
+            return $input;
+        }
+    }
+
+
     public function addContact()
     {
-            $email = readline("Enter any Email here: ");
-            $this->error->contactEmail($email);
-            
-            $name = readline("Enter Full Name here: ");
-            $this->error->contactName($name);
+        $this->error->errorList = [];
+        $name = $this->collectInput('name', 'What is Your lastname: ');
+        $email = $this->collectInput('email', 'What is Your email: ');
+        $address = $this->collectInput('address', 'What is Your address: ');
 
-            $address = readline("Enter any Address details here: ");
-            $this->error->contactAddress($address);
 
-        $this->newContact = new Contact($email, $name, $address);
-        $this->contactList->saveContact($this->newContact);
-        echo "New contact, $name created successfully\n";
 
+        if (empty($this->error->errorList)) {
+
+            $this->newContact = new Contact($email, $name, $address);
+            $this->contactList->saveContact($this->newContact);
+            echo "New contact, $name created successfully\n";
+        } else {
+            print_r($this->error->errorList);
+        }
     }
 
     public function deleteContact()
     {
-
         $email = readline("Enter any Email here: ");
-        $this->contactList->removeContact($email);
-        echo "$email deleted successfully\n";
+        foreach ($this->contactList->contact_list as $value) {
+            if ($value->email === $email) {
+                $this->contactList->removeContact($email);
+                echo "$email deleted successfully\n";
+            } else {
+                echo "$email does not exist\n";
+            }
+        }
     }
 
     public function findContact()
     {
 
         $name = readline("Enter any name here: ");
-        $this->contactList->searched_contact = [];
-        $this->contactList->searchContact($name);
-        print_r($this->contactList->searched_contact);
-
+        foreach ($this->contactList->contact_list as $value) {
+            if ($value->name === $name) {
+                $this->contactList->searched_contact = [];
+                $this->contactList->searchContact($name);
+                print_r($this->contactList->searched_contact);
+            } else {
+                echo "$name does not exist\n";
+            }
+        }
     }
-
 }
 
 $start = new UserInterface;
