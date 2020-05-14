@@ -24,12 +24,12 @@ class ErrorHandler
         try {
 
             if (empty($email)) {
-                throw new EmailErrException("Email is required");
+                throw new EmailErrException("Email is required\n");
             } else {
                 $email = $this->test_input($email);
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-                    throw new EmailValidErrException("Invalid email format");
+                    throw new EmailValidErrException("Invalid email format\n");
                 }
             }
         } catch (EmailErrException $e) {
@@ -48,11 +48,11 @@ class ErrorHandler
         try {
 
             if (empty($name)) {
-                throw new NameErrException("Name is required");
+                throw new NameErrException("Name is required\n");
             } else {
                 $name = $this->test_input($name);
                 if (!preg_match("/^[a-zA-Z ]*$/", $name)) {
-                    throw new NameValidErrException("Only letters and white space allowed");
+                    throw new NameValidErrException("Only letters and white space allowed\n");
                 }
             }
         } catch (NameErrException $e) {
@@ -73,12 +73,12 @@ class ErrorHandler
 
             if (empty($address)) {
 
-                throw new AddressErrException("Address is required");
+                throw new AddressErrException("Address is required\n");
             } else {
                 $address = $this->test_input($address);
                 if (!preg_match('/\d+ [0-9a-zA-Z ]+/', $address)) {
 
-                    throw new AddressValidErrException("Please enter a valid house address");
+                    throw new AddressValidErrException("Please enter a valid house address\n");
                 }
             }
         } catch (AddressErrException $e) {

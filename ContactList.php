@@ -31,7 +31,6 @@ class ContactList{
             if ($items->name === $name){
                 $this->searched_contact[] = $items;
             }
-            return false;
     
         }
   
